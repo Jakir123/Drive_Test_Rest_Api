@@ -15,6 +15,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -267,7 +268,6 @@ public class MainActivity extends Activity {
         }
         return true;
     }
-
     /**
      * Display an error dialog showing that Google Play Services is missing
      * or out of date.
@@ -293,42 +293,44 @@ public class MainActivity extends Activity {
 
         java.io.File MuDi = getFilesDir();
         MuDi.mkdir();
-        java.io.File toFile = new java.io.File(getFilesDir(),file.getTitle());
+        java.io.File toFile = new java.io.File(getFilesDir(),file.getTitle());/* Create file within the project directory */
 
-//        java.io.File toFile = new java.io.File("/sdcard/"+file.getTitle());
+//        java.io.File toFile = new java.io.File("/sdcard/"+file.getTitle()); /* Create file in SDcard */
 
         long totalBytes =file.getFileSize();
         try {
-            toFile.createNewFile();
-            // URL url = new URL(urlString);
-            respEntity = mService.getRequestFactory()
-                    .buildGetRequest(new GenericUrl(downlaodUrl)).execute();
-            InputStream in = respEntity.getContent();
+            if(!toFile.exists()){
+                toFile.createNewFile();
+                // URL url = new URL(urlString);
+                respEntity = mService.getRequestFactory()
+                        .buildGetRequest(new GenericUrl(downlaodUrl)).execute();
+                InputStream in = respEntity.getContent();
 
-            try {
-                FileOutputStream f = new FileOutputStream(toFile) {
+                try {
+                    FileOutputStream f = new FileOutputStream(toFile) {
 
-                    @Override
-                    public void write(byte[] buffer, int byteOffset,
-                                      int byteCount) throws IOException {
-                        // TODO Auto-generated method stub
-                        super.write(buffer, byteOffset, byteCount);
+                        @Override
+                        public void write(byte[] buffer, int byteOffset,
+                                          int byteCount) throws IOException {
+                            // TODO Auto-generated method stub
+                            super.write(buffer, byteOffset, byteCount);
+                        }
+                    };
+                    byte[] buffer = new byte[1024];
+                    int len1 = 0;
+
+                    while ((len1 = in.read(buffer)) > 0) {
+                        f.write(buffer, 0, len1);
+
                     }
-                };
-                byte[] buffer = new byte[1024];
-                int len1 = 0;
+                    f.close();
+                } catch (Exception e) {
 
-                while ((len1 = in.read(buffer)) > 0) {
-                    f.write(buffer, 0, len1);
-
+                    return false;
                 }
-                f.close();
-            } catch (Exception e) {
 
-                return false;
+                return true;
             }
-
-            return true;
 
         } catch (IOException ex) {
 
@@ -343,6 +345,10 @@ public class MainActivity extends Activity {
             }
         }
         return false;
+    }
+
+    public void showMsg(String text){
+        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
 }

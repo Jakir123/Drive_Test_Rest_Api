@@ -40,6 +40,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         Log.e("On PostExecute","executions over");
+        mActivity.showMsg("All files are Up to date!!!");
     }
 
     /**
