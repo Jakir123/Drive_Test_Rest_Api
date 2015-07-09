@@ -31,6 +31,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
 
     /**
      * Constructor.
+     *
      * @param activity MainActivity that spawned this task.
      */
     ApiAsyncTask(MainActivity activity) {
@@ -39,12 +40,13 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Log.e("On PostExecute","executions over");
+        Log.e("On PostExecute", "executions over");
         mActivity.showMsg("All files are Up to date!!!");
     }
 
     /**
      * Background task to call Drive API.
+     *
      * @param params no parameters needed for this task.
      */
     @Override
@@ -71,8 +73,9 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
 
     /**
      * Fetch a list of up to 10 file names and IDs.
+     *
      * @return List of Strings describing files, or an empty list if no files
-     *         found.
+     * found.
      * @throws IOException
      */
     private List<String> getDataFromApi() throws IOException {
@@ -83,7 +86,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("NO. OF FILE: ", files.size() + "");
         if (files != null) {
             for (File file : files) {
-                if(file.getTitle().endsWith(".mxl") || file.getTitle().endsWith(".xml")){
+                if (file.getTitle().endsWith(".mxl") || file.getTitle().endsWith(".xml")) {
                     fileInfo.add(String.format("%s (%s)\n",
                             file.getTitle(), file.getId()));
 
@@ -94,7 +97,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
 
 //                writeFileToSdCard(file,file.getTitle());
 //                    Log.e("URL of file: ",file.getDownloadUrl()+"");
-                    mActivity.download(file,file.getDownloadUrl());
+                    mActivity.download(file, file.getDownloadUrl());
 
 //                downloadFile(file,file.getId(),file.size(),file.getTitle());
 
@@ -105,22 +108,22 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
         return fileInfo;
     }
 
-    private void writeFileToSdCard(File file,String title) {
-        java.io.File toFile = new java.io.File("/sdcard/"+title);
+    private void writeFileToSdCard(File file, String title) {
+        java.io.File toFile = new java.io.File("/sdcard/" + title);
 
         try {
             toFile.createNewFile();
-            InputStream inputStream= new FileInputStream(file+"");
+            InputStream inputStream = new FileInputStream(file + "");
             byte currentXMLBytes[] = inputStream.toString().getBytes();
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
             OutputStream out = new FileOutputStream(toFile);
 
-            int read=0;
+            int read = 0;
             byte[] bytes = new byte[1024];
 
-            while((read = byteArrayInputStream.read(bytes))!= -1){
+            while ((read = byteArrayInputStream.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
-                out.write( '\n' );
+                out.write('\n');
             }
             inputStream.close();
             out.flush();
@@ -133,16 +136,16 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    private void downloadFile(File filee, String id, int size,String title) {
+    private void downloadFile(File filee, String id, int size, String title) {
 
         File file = null;
 
 
         try {
             file = mActivity.mService.files().get(id).execute();
-            java.io.File toFile = new java.io.File("/sdcard/"+title);
+            java.io.File toFile = new java.io.File("/sdcard/" + title);
             toFile.createNewFile();
-            HttpDownloadManager downloader = new HttpDownloadManager(mActivity,file, toFile);
+            HttpDownloadManager downloader = new HttpDownloadManager(mActivity, file, toFile);
             downloader.setListener(new HttpDownloadManager.FileDownloadProgressListener() {
 
                 public void downloadProgress(long bytesRead, long totalBytes) {
@@ -159,7 +162,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
                 }
             });
             downloader.download();
-            return ;
+            return;
 
         } catch (IOException e) {
             e.printStackTrace();

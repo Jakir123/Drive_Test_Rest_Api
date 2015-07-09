@@ -108,7 +108,7 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
 
     private void writeToFile(String contents) {
         try {
-            File myFile = new File("/sdcard/"+FILE_TITLE);
+            File myFile = new File("/sdcard/"+ FILE_TITLE);
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
 

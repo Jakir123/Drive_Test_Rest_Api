@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { DriveScopes.DRIVE };
+    private static final String[] SCOPES = {DriveScopes.DRIVE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +100,7 @@ public class MainActivity extends Activity {
                 .setApplicationName("Drive API Android Quickstart")
                 .build();
     }
+
     /**
      * Called whenever this activity is pushed to the foreground, such as after
      * a call to onCreate().
@@ -114,21 +115,23 @@ public class MainActivity extends Activity {
                     "after installing, close and relaunch this app.");
         }
     }
+
     /**
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it.
+     *
      * @param requestCode code indicating which activity result is incoming.
-     * @param resultCode code indicating the result of the incoming
-     *     activity result.
-     * @param data Intent (containing result data) returned by incoming
-     *     activity result.
+     * @param resultCode  code indicating the result of the incoming
+     *                    activity result.
+     * @param data        Intent (containing result data) returned by incoming
+     *                    activity result.
      */
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
                     isGooglePlayServicesAvailable();
@@ -197,6 +200,7 @@ public class MainActivity extends Activity {
      * Fill the data TextView with the given List of Strings; called from
      * background threads and async tasks that need to update the UI (in the
      * UI thread).
+     *
      * @param dataStrings a List of Strings to populate the main TextView with.
      */
     public void updateResultsText(final List<String> dataStrings) {
@@ -219,6 +223,7 @@ public class MainActivity extends Activity {
     /**
      * Show a status message in the list header TextView; called from background
      * threads and async tasks that need to update the UI (in the UI thread).
+     *
      * @param message a String to display in the UI header TextView.
      */
     public void updateStatus(final String message) {
@@ -241,6 +246,7 @@ public class MainActivity extends Activity {
 
     /**
      * Checks whether the device currently has a network connection.
+     *
      * @return true if the device has a network connection, false otherwise.
      */
     private boolean isDeviceOnline() {
@@ -254,8 +260,9 @@ public class MainActivity extends Activity {
      * Check that Google Play services APK is installed and up to date. Will
      * launch an error dialog for the user to update Google Play Services if
      * possible.
+     *
      * @return true if Google Play Services is available and up to
-     *     date on this device; false otherwise.
+     * date on this device; false otherwise.
      */
     private boolean isGooglePlayServicesAvailable() {
         final int connectionStatusCode =
@@ -263,16 +270,18 @@ public class MainActivity extends Activity {
         if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
             showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
             return false;
-        } else if (connectionStatusCode != ConnectionResult.SUCCESS ) {
+        } else if (connectionStatusCode != ConnectionResult.SUCCESS) {
             return false;
         }
         return true;
     }
+
     /**
      * Display an error dialog showing that Google Play Services is missing
      * or out of date.
+     *
      * @param connectionStatusCode code describing the presence (or lack of)
-     *     Google Play Services on this device.
+     *                             Google Play Services on this device.
      */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
@@ -288,18 +297,18 @@ public class MainActivity extends Activity {
         });
     }
 
-    public boolean download(File file,String downlaodUrl) {
+    public boolean download(File file, String downlaodUrl) {
         HttpResponse respEntity = null;
 
         java.io.File MuDi = getFilesDir();
         MuDi.mkdir();
-        java.io.File toFile = new java.io.File(getFilesDir(),file.getTitle());/* Create file within the project directory */
+        java.io.File toFile = new java.io.File(getFilesDir(), file.getTitle());/* Create file within the project directory */
 
 //        java.io.File toFile = new java.io.File("/sdcard/"+file.getTitle()); /* Create file in SDcard */
 
-        long totalBytes =file.getFileSize();
+        long totalBytes = file.getFileSize();
         try {
-            if(!toFile.exists()){
+            if (!toFile.exists()) {
                 toFile.createNewFile();
                 // URL url = new URL(urlString);
                 respEntity = mService.getRequestFactory()
@@ -335,7 +344,7 @@ public class MainActivity extends Activity {
         } catch (IOException ex) {
 
         } finally {
-            if(respEntity != null) {
+            if (respEntity != null) {
                 try {
                     respEntity.disconnect();
                 } catch (IOException e) {
@@ -347,7 +356,7 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    public void showMsg(String text){
+    public void showMsg(String text) {
         Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
