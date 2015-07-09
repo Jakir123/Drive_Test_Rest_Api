@@ -288,11 +288,15 @@ public class MainActivity extends Activity {
         });
     }
 
-
     public boolean download(File file,String downlaodUrl) {
         HttpResponse respEntity = null;
 
-        java.io.File toFile = new java.io.File("/sdcard/"+file.getTitle());
+        java.io.File MuDi = getFilesDir();
+        MuDi.mkdir();
+        java.io.File toFile = new java.io.File(getFilesDir(),file.getTitle());
+
+//        java.io.File toFile = new java.io.File("/sdcard/"+file.getTitle());
+
         long totalBytes =file.getFileSize();
         try {
             toFile.createNewFile();
