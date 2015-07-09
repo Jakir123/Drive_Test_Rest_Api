@@ -82,8 +82,9 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("NO. OF FILE: ", files.size() + "");
         if (files != null) {
             for (File file : files) {
-                fileInfo.add(String.format("%s (%s)\n",
-                        file.getTitle(), file.getId()));
+                if(file.getTitle().endsWith(".mxl") || file.getTitle().endsWith(".xml")){
+                    fileInfo.add(String.format("%s (%s)\n",
+                            file.getTitle(), file.getId()));
 
 //                Intent i=new Intent(mActivity.getBaseContext(), RetrieveContentsActivity.class);
 //                i.putExtra("id",file.getId());
@@ -91,9 +92,12 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
 //                mActivity.startActivity(i);
 
 //                writeFileToSdCard(file,file.getTitle());
-                Log.e("URL of file: ",file.getDownloadUrl()+"");
+//                    Log.e("URL of file: ",file.getDownloadUrl()+"");
+                    mActivity.download(file,file.getDownloadUrl());
 
 //                downloadFile(file,file.getId(),file.size(),file.getTitle());
+
+                }
 
             }
         }
@@ -132,6 +136,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
 
         File file = null;
 
+
         try {
             file = mActivity.mService.files().get(id).execute();
             java.io.File toFile = new java.io.File("/sdcard/"+title);
@@ -160,4 +165,5 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
         }
 
     }
+
 }

@@ -20,12 +20,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +54,7 @@ public class MainActivity extends Activity {
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { DriveScopes.DRIVE_METADATA_READONLY };
+    private static final String[] SCOPES = { DriveScopes.DRIVE };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,6 +286,59 @@ public class MainActivity extends Activity {
                 dialog.show();
             }
         });
+    }
+
+
+    public boolean download(File file,String downlaodUrl) {
+        HttpResponse respEntity = null;
+
+        java.io.File toFile = new java.io.File("/sdcard/"+file.getTitle());
+        long totalBytes =file.getFileSize();
+        try {
+            toFile.createNewFile();
+            // URL url = new URL(urlString);
+            respEntity = mService.getRequestFactory()
+                    .buildGetRequest(new GenericUrl(downlaodUrl)).execute();
+            InputStream in = respEntity.getContent();
+
+            try {
+                FileOutputStream f = new FileOutputStream(toFile) {
+
+                    @Override
+                    public void write(byte[] buffer, int byteOffset,
+                                      int byteCount) throws IOException {
+                        // TODO Auto-generated method stub
+                        super.write(buffer, byteOffset, byteCount);
+                    }
+                };
+                byte[] buffer = new byte[1024];
+                int len1 = 0;
+
+                while ((len1 = in.read(buffer)) > 0) {
+                    f.write(buffer, 0, len1);
+
+                }
+                f.close();
+            } catch (Exception e) {
+
+                return false;
+            }
+
+            return true;
+
+        } catch (IOException ex) {
+
+        } finally {
+            if(respEntity != null) {
+                try {
+                    respEntity.disconnect();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
     }
 
 }
